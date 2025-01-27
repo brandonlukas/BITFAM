@@ -1,10 +1,10 @@
 #' BITFAM main function. BITFAM will infer the transcription factor activities
 #' from single cell RNA-seq data based on the ChIP-seq data
 #'
-#' @param data A matrix [N, M] of normalized single cell RNA-seq data.
-#'        The rows are cells and the columns are genes.
+#' @param data A matrix [M, N] of normalized single cell RNA-seq data.
+#'        The rows are genes and the columns are cells
 #'        If Seurat object, access by `data <- GetAssayData(cells)`
-#'        Recommended to subset to top 5000 variable genes.
+#'        Recommended to subset to top 2000-5000 variable genes.
 #' @param network A binary network matrix [M, K] of prior knowledge.
 #'        The rows are genes and the columns are TFs.
 #'        Recommended to subset to TFs present in the data and
@@ -25,8 +25,8 @@ BITFAM <- function(
     iter = 8000,
     tol_rel_obj = 0.005) {
   # Check if the column names of data match the row names of network
-  if (!all(colnames(data) == rownames(network))) {
-    stop("Column names of data must match row names of network")
+  if (!all(rownames(data) == rownames(network))) {
+    stop("Row names of data must match row names of network")
   }
 
   X <- t(as.matrix(data))
