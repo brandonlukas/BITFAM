@@ -2,29 +2,45 @@
 % Please edit documentation in R/BITFAM.R
 \name{BITFAM}
 \alias{BITFAM}
-\title{BITFAM main function. BITFAM will infer the transcription factor activities from single cell RNA-seq data based on the ChIP-seq data}
+\title{BITFAM main function}
 \usage{
-
-BITFAM(data, species, interseted_TF = NA, scATAC_obj = NA, ncores, iter = 8000, tol_rel_obj = 0.005)
-  
+BITFAM(data, network, ncores = 8, iter = 8000, tol_rel_obj = 0.005)
+}
 \arguments{
-\item{data}{A matrix or dataframe, normalized single cell RNA-seq data}
+  \item{data}{A matrix [N, M] of normalized single cell RNA-seq data.
+              The rows are cells and the columns are genes.
+              If Seurat object, access by \code{data <- GetAssayData(cells)}.
+              Recommended to subset to top 5000 variable genes.}
 
-\item{species}{mouse or human}
+  \item{network}{A binary network matrix [M, K] of prior knowledge.
+                 The rows are genes and the columns are TFs.
+                 Recommended to subset to TFs present in the data and
+                 filter TFs with few (e.g., < 10) target genes.}
 
-\item{interseted_TF}{Transcription factors of interests}
+  \item{ncores}{Number of CPU cores. Default is 8.}
 
-\item{scATAC_obj}{A preprocessed Seurat object of scATAC-seq data}
+  \item{iter}{Number of max iterations. Default is 8000.}
 
-\item{ncores}{Number of CPU cores}
-
-\item{iter}{Number of max iteration}
-
-\item{tol_rel_obj}{The convergence tolerance on the relative norm of the objective}
+  \item{tol_rel_obj}{Convergence tolerance on the relative norm of the objective.
+                     Default is 0.005.}
 }
 \value{
-sampling results of TF inferred activities and TF-gene weights
+Sampling results of TF inferred activities and TF-gene weights.
 }
 \description{
-BITFAM main function. BITFAM will infer the transcription factor activities from single cell RNA-seq data based on the ChIP-seq data
+BITFAM will infer the transcription factor activities from single cell RNA-seq data based on the ChIP-seq data.
+}
+\details{
+The function checks if the column names of the data match the row names of the network and ensures they are in the same order. If not, it stops with an error.
+}
+\examples{
+\dontrun{
+data <- matrix(rnorm(1000), nrow = 100, ncol = 10)
+network <- matrix(sample(0:1, 100, replace = TRUE), nrow = 10, ncol = 10)
+colnames(data) <- rownames(network) <- paste0("Gene", 1:10)
+result <- BITFAM(data, network)
+}
+}
+\seealso{
+\code{\link[rstan]{stan_model}}, \code{\link[Seurat]{GetAssayData}}
 }
