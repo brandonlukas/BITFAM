@@ -3,7 +3,7 @@
 #'
 #' @param data A matrix [N, M] of normalized single cell RNA-seq data.
 #'        The rows are cells and the columns are genes.
-#'        If Seurat object, access by `seurat_obj[["RNA"]]@data`
+#'        If Seurat object, access by `data <- GetAssayData(cells)`
 #'        Recommended to subset to top 5000 variable genes.
 #' @param network A binary network matrix [M, K] of prior knowledge.
 #'        The rows are genes and the columns are TFs.
