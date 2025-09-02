@@ -2,14 +2,14 @@
 
 Example usage:
 ```
-# cells is a Seurat object
-# BITFAM takes a (sparse) matrix as input
-# Note that BITFAM will immediately densify matrix
+# We usually work with a Seurat object
+# BITFAM needs log-normalized counts as a matrix
+# BITFAM will immediately densify this matrix
 genes <- VariableFeatures(cells)
 data <- GetAssayData(cells)[genes, ]
 
-# We usually represent networks in long format (source, target)
-# We need to convert to wide for BITFAM
+# We usually represent GRNs in long format (source, target)
+# BITFAM needs it in wide format
 # We also filter for TFs with few targets here
 # ENSURE_ALL_GENES is a hack to get all genes in network
 network <- long_network %>%
