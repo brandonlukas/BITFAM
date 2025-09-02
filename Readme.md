@@ -4,7 +4,7 @@ Example usage:
 ```
 # cells is a Seurat object
 # BITFAM takes a (sparse) matrix as input
-# Note that BITFAM will immediately densify network
+# Note that BITFAM will immediately densify matrix
 genes <- VariableFeatures(cells)
 data <- GetAssayData(cells)[genes, ]
 
