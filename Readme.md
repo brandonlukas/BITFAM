@@ -1,3 +1,37 @@
+*Forked to enable inference with custom GRN networks*
+
+Example usage:
+```
+# cells is a Seurat object
+# BITFAM takes a (sparse) matrix as input
+# Note that BITFAM will immediately densify network
+genes <- VariableFeatures(cells)
+data <- GetAssayData(cells)[genes, ]
+
+# We usually represent networks in long format (source, target)
+# We need to convert to wide for BITFAM
+# We also filter for TFs with few targets here
+# ENSURE_ALL_GENES is a hack to get all genes in network
+network <- long_network %>%
+  filter(target %in% genes) %>%
+  add_count(source) %>%
+  filter(n >= min_targets) %>%
+  bind_rows(
+    tibble(source = "ENSURE_ALL_GENES", target = genes)
+  ) %>%
+  mutate(value = 1) %>%
+  pivot_wider(id_cols = target, names_from = source, values_fill = 0) %>%
+  select(-ENSURE_ALL_GENES) %>%
+  column_to_rownames("target")
+
+# We need rownames(data) and rownames(network) to be EQUAL and ALIGNED
+# This condition is also verified by BITFAM
+data <- data[rownames(network), ]
+
+# Everything else is the same
+res <- BITFAM(data, network)
+```
+
 BITFAM user guide
 ================
 # Introduction
