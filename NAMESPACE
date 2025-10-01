@@ -3,6 +3,7 @@
 export(BITFAM)
 export(BITFAM_activities)
 export(BITFAM_preprocess)
+export(BITFAM_scATAC)
 export(BITFAM_weights)
 import(Seurat)
 import(rstan)

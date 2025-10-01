@@ -2,45 +2,42 @@
 % Please edit documentation in R/BITFAM.R
 \name{BITFAM}
 \alias{BITFAM}
-\title{BITFAM main function}
+\title{BITFAM main function. BITFAM will infer the transcription factor activities
+from single cell RNA-seq data based on the ChIP-seq data}
 \usage{
-BITFAM(data, network, ncores = 8, iter = 8000, tol_rel_obj = 0.005)
+BITFAM(data, network, ncores = 8, iter = 8000, tol_rel_obj = 0.005, seed = 100)
 }
 \arguments{
-  \item{data}{A matrix [N, M] of normalized single cell RNA-seq data.
-              The rows are cells and the columns are genes.
-              If Seurat object, access by \code{data <- GetAssayData(cells)}.
-              Recommended to subset to top 5000 variable genes.}
+\item{data}{A matrix of size M × N (genes × cells) of normalized single cell RNA-seq data.
+The rows are genes and the columns are cells.
+If Seurat object, access by \code{data <- GetAssayData(cells)}.
+Recommended to subset to top 2000-5000 variable genes.}
 
-  \item{network}{A binary network matrix [M, K] of prior knowledge.
-                 The rows are genes and the columns are TFs.
-                 Recommended to subset to TFs present in the data and
-                 filter TFs with few (e.g., < 10) target genes.}
+\item{network}{A binary network matrix of size M × K (genes × TFs) of prior knowledge.
+The rows are genes and the columns are TFs.
+Recommended to subset to TFs present in the data and
+filter TFs with few (e.g., < 10) target genes.}
 
-  \item{ncores}{Number of CPU cores. Default is 8.}
+\item{ncores}{Number of CPU cores to use. Default is 8.}
 
-  \item{iter}{Number of max iterations. Default is 8000.}
+\item{iter}{Maximum number of iterations. Default is 8000.}
 
-  \item{tol_rel_obj}{Convergence tolerance on the relative norm of the objective.
-                     Default is 0.005.}
+\item{tol_rel_obj}{Convergence tolerance on the relative norm of the objective.
+Default is 0.005.}
+
+\item{seed}{Random seed for reproducibility. Default is 100.}
 }
 \value{
-Sampling results of TF inferred activities and TF-gene weights.
+sampling results of TF inferred activities and TF-gene weights
 }
 \description{
-BITFAM will infer the transcription factor activities from single cell RNA-seq data based on the ChIP-seq data.
-}
-\details{
-The function checks if the column names of the data match the row names of the network and ensures they are in the same order. If not, it stops with an error.
+BITFAM main function. BITFAM will infer the transcription factor activities
+from single cell RNA-seq data based on the ChIP-seq data
 }
 \examples{
-\dontrun{
 data <- matrix(rnorm(1000), nrow = 100, ncol = 10)
 network <- matrix(sample(0:1, 100, replace = TRUE), nrow = 10, ncol = 10)
 colnames(data) <- rownames(network) <- paste0("Gene", 1:10)
 result <- BITFAM(data, network)
-}
-}
-\seealso{
-\code{\link[rstan]{stan_model}}, \code{\link[Seurat]{GetAssayData}}
+
 }

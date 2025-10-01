@@ -1,29 +1,37 @@
 #' BITFAM main function. BITFAM will infer the transcription factor activities
 #' from single cell RNA-seq data based on the ChIP-seq data
 #'
-#' @param data A matrix [M, N] of normalized single cell RNA-seq data.
-#'        The rows are genes and the columns are cells
-#'        If Seurat object, access by `data <- GetAssayData(cells)`
+#' @param data A matrix of size M × N (genes × cells) of normalized single cell RNA-seq data.
+#'        The rows are genes and the columns are cells.
+#'        If Seurat object, access by `data <- GetAssayData(cells)`.
 #'        Recommended to subset to top 2000-5000 variable genes.
-#' @param network A binary network matrix [M, K] of prior knowledge.
+#' @param network A binary network matrix of size M × K (genes × TFs) of prior knowledge.
 #'        The rows are genes and the columns are TFs.
 #'        Recommended to subset to TFs present in the data and
 #'        filter TFs with few (e.g., < 10) target genes.
-#' @param number of CPU cores. Default is 8
-#' @param number of max iteration. Default is 8000
-#' @param convergence tolerance on the relative norm of the objective.
-#'        Default is 0.005
+#' @param ncores Number of CPU cores to use. Default is 8.
+#' @param iter Maximum number of iterations. Default is 8000.
+#' @param tol_rel_obj Convergence tolerance on the relative norm of the objective.
+#'        Default is 0.005.
+#' @param seed Random seed for reproducibility. Default is 100.
+#'
 #' @return sampling results of TF inferred activities and TF-gene weights
 #' @export
 #' @import rstan
 #' @import Seurat
-
+#' @examples
+#' data <- matrix(rnorm(1000), nrow = 100, ncol = 10)
+#' network <- matrix(sample(0:1, 100, replace = TRUE), nrow = 10, ncol = 10)
+#' colnames(data) <- rownames(network) <- paste0("Gene", 1:10)
+#' result <- BITFAM(data, network)
+#'
 BITFAM <- function(
     data,
     network,
     ncores = 8,
     iter = 8000,
-    tol_rel_obj = 0.005) {
+    tol_rel_obj = 0.005,
+    seed = 100) {
   # Check if the column names of data match the row names of network
   if (!all(rownames(data) == rownames(network))) {
     stop("Row names of data must match row names of network")
@@ -40,7 +48,7 @@ BITFAM <- function(
   rstan_options(auto_write = TRUE)
   options(mc.cores = ncores)
 
-  set.seed(100)
+  set.seed(seed)
   pca_beta_piror <- "
 data {
 int<lower=0> N; // Number of samples
