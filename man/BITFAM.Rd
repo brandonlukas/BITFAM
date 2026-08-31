@@ -35,9 +35,14 @@ BITFAM main function. BITFAM will infer the transcription factor activities
 from single cell RNA-seq data based on the ChIP-seq data
 }
 \examples{
+# Rows are genes in both matrices, in the same order.
 data <- matrix(rnorm(1000), nrow = 100, ncol = 10)
-network <- matrix(sample(0:1, 100, replace = TRUE), nrow = 10, ncol = 10)
-colnames(data) <- rownames(network) <- paste0("Gene", 1:10)
+network <- matrix(sample(0:1, 500, replace = TRUE), nrow = 100, ncol = 5)
+rownames(data) <- rownames(network) <- paste0("Gene", 1:100)
+colnames(data) <- paste0("Cell", 1:10)
+colnames(network) <- paste0("TF", 1:5)
+\dontrun{
 result <- BITFAM(data, network)
+}
 
 }

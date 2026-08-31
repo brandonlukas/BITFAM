@@ -11,8 +11,21 @@ How BITFAM works
 
 What this fork changes
 ----------------------
-- Uses user-supplied GRN/TF–target networks instead of bundled priors.
-- Exposes `seed` as a user-facing parameter for reproducible runs.
+This is a modified version of BITFAM (https://github.com/jaleesr/BITFAM).
+Changes relative to upstream:
+
+- Package renamed from `BITFAM` to `BITFAM2` (version 1.2.0).
+- `BITFAM()` takes a user-supplied binary gene × TF prior network matrix
+  (`network`) directly, replacing the `species`, `interseted_TF` and
+  `scATAC_obj` arguments and the ChIP-seq target sets bundled in
+  `inst/extdata`.
+- Removed internal variable-gene subsetting; gene selection is now the
+  caller's responsibility.
+- Removed automatic upper-casing of gene symbols.
+- Random seed exposed as the `seed` argument (previously hard-coded to 100).
+- `ncores` given a default value; roxygen documentation rewritten.
+- Added validation that `data` and `network` row names agree.
+- `BITFAM_scATAC()` added to the package exports.
 
 Installation
 ------------
@@ -66,3 +79,14 @@ Notes
 -----
 - The model densifies inputs; ensure the dense matrix fits in memory.
 - If convergence is slow, increase `iter` and/or decrease `tol_rel_obj` in `BITFAM()`.
+
+License and attribution
+-----------------------
+Licensed under the Apache License, Version 2.0; see `LICENSE`. Modifications
+made in this fork are stated above and in `NOTICE`.
+
+Original method:
+
+> Gao, S. et al. Identifying noise-tolerant, statistically significant
+> transcription factor activity from single-cell RNA-seq data.
+> *Genome Research* **31**, 1296–1311 (2021).

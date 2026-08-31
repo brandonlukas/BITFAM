@@ -20,10 +20,15 @@
 #' @import rstan
 #' @import Seurat
 #' @examples
+#' # Rows are genes in both matrices, in the same order.
 #' data <- matrix(rnorm(1000), nrow = 100, ncol = 10)
-#' network <- matrix(sample(0:1, 100, replace = TRUE), nrow = 10, ncol = 10)
-#' colnames(data) <- rownames(network) <- paste0("Gene", 1:10)
+#' network <- matrix(sample(0:1, 500, replace = TRUE), nrow = 100, ncol = 5)
+#' rownames(data) <- rownames(network) <- paste0("Gene", 1:100)
+#' colnames(data) <- paste0("Cell", 1:10)
+#' colnames(network) <- paste0("TF", 1:5)
+#' \dontrun{
 #' result <- BITFAM(data, network)
+#' }
 #'
 BITFAM <- function(
     data,
@@ -32,9 +37,13 @@ BITFAM <- function(
     iter = 8000,
     tol_rel_obj = 0.005,
     seed = 100) {
-  # Check if the column names of data match the row names of network
-  if (!all(rownames(data) == rownames(network))) {
-    stop("Row names of data must match row names of network")
+  # Rows of both matrices are genes and must line up exactly; a silent
+  # mismatch here misassigns every TF-target prior.
+  if (is.null(rownames(data)) || is.null(rownames(network))) {
+    stop("Both data and network must have gene names as row names")
+  }
+  if (!identical(rownames(data), rownames(network))) {
+    stop("Row names of data must match row names of network, in the same order")
   }
 
   X <- t(as.matrix(data))

@@ -1,0 +1,28 @@
+BITFAM2
+Copyright 2025-2026 Brandon Lukas
+
+This product includes software developed as part of BITFAM
+(https://github.com/jaleesr/BITFAM), licensed under the Apache License,
+Version 2.0.
+
+Original work:
+  Gao, S. et al. Identifying noise-tolerant, statistically significant
+  transcription factor activity from single-cell RNA-seq data.
+  Genome Research 31, 1296-1311 (2021).
+
+This is a MODIFIED version of BITFAM. Changes relative to the upstream
+project are listed in Readme.md under "What this fork changes" and
+summarised here:
+
+  - Package renamed from BITFAM to BITFAM2 (version 1.2.0).
+  - BITFAM() now takes a user-supplied binary gene x TF prior network
+    matrix (`network`) directly, replacing the `species`,
+    `interseted_TF` and `scATAC_obj` arguments and the ChIP-seq target
+    sets bundled in inst/extdata.
+  - Removed internal variable-gene subsetting; gene selection is now
+    the caller's responsibility.
+  - Removed automatic upper-casing of gene symbols.
+  - Random seed exposed as the `seed` argument (previously hard-coded).
+  - `ncores` given a default value; roxygen documentation rewritten.
+  - Added validation that data and network row names agree.
+  - BITFAM_scATAC() added to the package exports.
