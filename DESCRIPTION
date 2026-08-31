@@ -1,12 +1,15 @@
 Package: BITFAM2
 Title: Bayesion Inference Transcription Factor activity Model
 Version: 1.2.0
-Authors@R: 
+Authors@R: c(
     person(given = "Shang",
            family = "Gao",
-           role = c("aut", "cre"),
-           email = "sgao@uic.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           role = "aut",
+           email = "sgao@uic.edu"),
+    person(given = "Brandon",
+           family = "Lukas",
+           role = "cre",
+           email = "brandonlukas@gmail.com"))
 Description: BITFAM is a Bayesian inference model to infer the transcription factor activities by integrating single cell gene expression with known transcription factor ChIP-seq data.
 License: Apache License (== 2.0) + file LICENSE
 Encoding: UTF-8
